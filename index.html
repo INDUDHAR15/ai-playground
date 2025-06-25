@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gemini API Interaction</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- <style>
+        body {
+            font-family: 'Google Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0c1117; /* Dark background */
+            color: #e2e8f0; /* Light text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #0c1117; /* Dark container */
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            text-align: left; /* Align text to the left */
+            width: 90%; /* Wider container */
+            max-width: 800px; /* Maximum width */
+            border: 1px solid #1e293b;
+        }
+
+        h1 {
+            color: #6ee7b7; /* Teal heading */
+            margin-bottom: 30px;
+            font-size: 28px; /* Larger heading */
+        }
+
+        div {
+            margin-bottom: 25px; /* Increased margin */
+        }
+
+        input[type="text"] {
+            width: calc(100% - 150px); /* Slightly wider input */
+            padding: 12px;
+            border: 1px solid #334155; /* Darker border */
+            border-radius: 6px;
+            margin-right: 15px; /* Increased margin */
+            font-size: 18px; /* Larger font */
+            background-color: #1e293b; /* Dark input background */
+            color: #e2e8f0; /* Light input text */
+            transition: border-color 0.3s ease; /* Smooth transition */
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #6ee7b7; /* Highlight on focus */
+            box-shadow: 0 0 0 3px rgba(110, 231, 183, 0.2); /* Subtle shadow */
+        }
+
+        button {
+            background-color: #6ee7b7; /* Teal button */
+            color: #0c1117; /* Dark button text */
+            padding: 12px 25px; /* Increased padding */
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px; /* Larger font */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #14b8a6; /* Darker teal on hover */
+            color: #fff;
+        }
+
+        #response {
+            margin-top: 30px; /* Increased margin */
+            padding: 20px;
+            background-color: #1e293b; /* Darker response background */
+            border: 1px solid #334155; /* Darker border */
+            border-radius: 6px;
+            text-align: left;
+            font-size: 18px; /* Larger font */
+            color: #e2e8f0;
+            white-space: pre-wrap; /* Preserve formatting */
+            line-height: 1.6;
+        }
+
+        #response strong {
+            color: #6ee7b7; /* Teal highlight */
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+
+            input[type="text"] {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        /* Added to remove the right margin of the input field when button is on a new line */
+        @media screen and (max-width: 600px) {
+            input[type="text"] {
+                margin-right: 0;
+            }
+        }
+    </style> -->
+</head>
+<body>
+    <h1>Interact with Vinay-GPT</h1>
+    <label for="prompt">Enter your prompt:</label><br>
+    <textarea type="text" id="prompt" name="prompt"></textarea><br><br>
+    <button onclick="sendRequest();">Submit</button>
+    <h2>Generated Response:</h2>
+    <p id="response-output"></p>
+</body>
+<script>
+    function sendRequest() {
+        // Gather the values from input fields
+        const promptInput = document.getElementById('prompt').value;
+
+        // Prepare the payload -- adjust keys to what your backend expects
+        const payload = {
+          input_prompt: promptInput
+        };
+
+        const responseDiv = document.getElementById('response-output');
+        // Send a POST request to your backend API endpoint
+        fetch('http://localhost:8000/prompt-gemini', { // Update URL and port as needed
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response from backend:', data);
+            responseDiv.innerHTML = marked.parse(data.response);
+        })
+        .catch(error => {
+            responseDiv.textContent = 'Error generating response.';
+        });
+      }
+</script>
+</html>
